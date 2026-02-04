@@ -1,0 +1,158 @@
+<div class="teacher-container">
+  <header>
+    <h1>🎯 Odd One Out - Teacher Control</h1>
+    <p class="subtitle">Setup your classroom guessing game</p>
+  </header>
+  
+  <div class="game-setup">
+    <h2>Game Setup</h2>
+    
+    <div class="input-group">
+      <label for="message">Secret Message:</label>
+      <input 
+        type="text" 
+        id="message"
+        [(ngModel)]="message"
+        placeholder="Enter the secret word or phrase"
+        maxlength="100"
+      />
+      <small>This will be shown to most students</small>
+    </div>
+    
+    <div class="input-row">
+      <div class="input-group">
+        <label for="totalStudents">Class Size:</label>
+        <input 
+          type="number" 
+          id="totalStudents"
+          [(ngModel)]="totalStudents"
+          min="2"
+          max="50"
+        />
+        <small>Total number of students</small>
+      </div>
+      
+      <div class="input-group">
+        <label for="oddCount">Odd Ones:</label>
+        <input 
+          type="number" 
+          id="oddCount"
+          [(ngModel)]="oddCount"
+          min="1"
+          [max]="totalStudents - 1"
+        />
+        <small>Students who get "ODD ONE OUT"</small>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button 
+        class="btn btn-primary"
+        (click)="generateGame()"
+        [disabled]="!message || totalStudents < 2 || oddCount < 1"
+      >
+        🎮 GENERATE QR CODE
+      </button>
+      
+      <button 
+        class="btn btn-secondary"
+        (click)="resetGame()"
+        [disabled]="!currentGame"
+      >
+        🔄 RESET GAME
+      </button>
+    </div>
+  </div>
+  
+  <div class="qr-section" *ngIf="currentGame">
+    <h2>QR Code for Students</h2>
+    <p>Students scan this with their phone cameras</p>
+    
+<div class="qr-container">
+    <!-- Check this img tag -->
+    <img 
+      *ngIf="qrCodeDataUrl" 
+      [src]="qrCodeDataUrl" 
+      alt="QR Code" 
+      class="qr-code"
+      (error)="onQrCodeError($event)"
+    />
+    
+    <div *ngIf="!qrCodeDataUrl" class="qr-loading">
+      <p>Generating QR code...</p>
+    </div>
+  </div>
+    
+    <div class="url-info">
+      <p><strong>URL:</strong> {{currentGame?.qrCodeUrl?.substring(0, 50)}}...</p>
+      <button 
+        class="btn btn-small"
+        (click)="copyUrlToClipboard()"
+        [disabled]="!currentGame?.qrCodeUrl"
+      >
+        📋 Copy URL
+      </button>
+    </div>
+  </div>
+  
+  <div class="stats-section" *ngIf="currentGame">
+    <h2>Live Statistics 
+        <button class="btn-refresh-stats" (click)="refreshStats()" title="Refresh">
+        🔄
+        </button>
+    </h2>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">{{assignedStudents}} / {{currentGame.totalStudents}}</div>
+        <div class="stat-label">Students Joined</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-value">{{oddOnesAssigned}} / {{currentGame.oddCount}}</div>
+        <div class="stat-label">Odd Ones Assigned</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-value">{{currentGame.totalStudents - assignedStudents}}</div>
+        <div class="stat-label">Remaining</div>
+      </div>
+    </div>
+    
+    <div class="progress-bar">
+      <div 
+        class="progress-fill"
+        [style.width.%]="(assignedStudents / currentGame.totalStudents) * 100"
+      ></div>
+    </div>
+  </div>
+  
+  <div class="instructions" *ngIf="!currentGame">
+    <h3>How to Play:</h3>
+    <ol>
+      <li>Enter a secret message (e.g., "ELEPHANT")</li>
+      <li>Set your class size (total students)</li>
+      <li>Set how many "odd ones" you want</li>
+      <li>Click "GENERATE QR CODE"</li>
+      <li>Project the QR code for students to scan</li>
+      <li>Students discuss to identify the odd ones</li>
+    </ol>
+  </div>
+</div>
+<div class="debug-section" *ngIf="currentGame">
+  <button (click)="clearLocalStorage()" class="btn-debug">
+    🧹 Clear Storage
+  </button>
+  <button (click)="debugLocalStorage()" class="btn-debug">
+    🐛 Debug
+  </button>
+  <button (click)="testLocalStorage()" class="btn-debug">
+  🧪 Test Storage
+</button>
+<button (click)="clearAllStorage()" class="btn-debug" style="background: #dc3545;">
+  💥 Clear All Storage
+</button>
+<button (click)="testQRGeneration()" class="btn-debug">
+  🖼️ Test QR
+</button>
+</div>

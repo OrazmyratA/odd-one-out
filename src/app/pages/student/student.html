@@ -1,0 +1,71 @@
+<div class="student-container" [ngClass]="{'odd-one': isOdd}">
+  <header class="student-header">
+    <h1>🎯 Odd One Out</h1>
+    <div class="student-info">
+      <span class="student-number">Student #{{studentNumber}}</span>
+      <span *ngIf="totalStudents > 0" class="game-info">
+        of {{totalStudents}} ({{oddCount}} odd {{oddCount === 1 ? 'one' : 'ones'}})
+      </span>
+    </div>
+  </header>
+  
+  <div class="message-area" *ngIf="!hasError">
+    <div class="message-box" *ngIf="!isOdd">
+      <div class="message-label">Your Secret Message:</div>
+      <div class="secret-message">{{message}}</div>
+      <div class="message-hint">(Keep this private!)</div>
+    </div>
+    
+    <div class="odd-box" *ngIf="isOdd">
+      <div class="odd-icon">🎭</div>
+      <div class="odd-title">ODD ONE OUT</div>
+      <div class="odd-message">You did not receive the secret message</div>
+      <div class="odd-hint">Try to blend in!</div>
+    </div>
+  </div>
+  
+  <div class="error-area" *ngIf="hasError">
+    <div class="error-icon">⚠️</div>
+    <div class="error-title">Oops!</div>
+    <div class="error-message">{{errorMessage}}</div>
+    <button class="btn btn-retry" (click)="refresh()">
+      🔄 Try Again
+    </button>
+  </div>
+  
+  <div class="instructions" *ngIf="!hasError">
+    <h3>How to Play:</h3>
+    <ul>
+      <li>✅ <strong>Keep your screen private</strong> - don't show others!</li>
+      <li>🗣️ <strong>Discuss with classmates</strong> to figure out the secret word</li>
+      <li>🎭 <strong>Odd ones</strong> should try to blend in and guess the word</li>
+      <li>🔍 <strong>Regular students</strong> should try to identify who got "ODD ONE OUT"</li>
+    </ul>
+    
+    <div class="game-tips" *ngIf="isOdd">
+      <h4>Tips for Odd Ones:</h4>
+      <p>Act like you know the secret! Ask questions about the word, 
+      make vague comments, and try to guess based on others' reactions.</p>
+    </div>
+    
+    <div class="game-tips" *ngIf="!isOdd">
+      <h4>Tips for Regular Students:</h4>
+      <p>Discuss the word without saying it directly. Watch for classmates 
+      who seem unsure or are asking too many basic questions.</p>
+    </div>
+  </div>
+  
+  <div class="actions" *ngIf="!hasError">
+    <button class="btn btn-secondary" (click)="shareGame()">
+      📱 Share Game
+    </button>
+    <button class="btn btn-refresh" (click)="refresh()">
+      🔄 Refresh
+    </button>
+  </div>
+  
+  <footer class="student-footer">
+    <p>Scanned from: {{gameId ? gameId.substring(0, 12) + '...' : 'Unknown game'}}</p>
+    <p class="footer-note">Game will reset when teacher generates a new QR code</p>
+  </footer>
+</div>
