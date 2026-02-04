@@ -56,7 +56,7 @@ async generateQRCode(gameConfig: GameConfig): Promise<string> {
   
   // Build student URL with all parameters
   private buildStudentUrl(gameConfig: GameConfig): string {
-    const baseUrl = window.location.origin + '/student';
+    const baseUrl = window.location.origin + '/#/student';
     
     // Create URL parameters
     const params = new URLSearchParams({
@@ -73,15 +73,34 @@ async generateQRCode(gameConfig: GameConfig): Promise<string> {
   }
   
   // Parse URL parameters
-  parseUrlParams(): any {
-    const params = new URLSearchParams(window.location.search);
-    
-    return {
-      gameId: params.get('game'),
-      totalStudents: parseInt(params.get('total') || '0'),
-      oddCount: parseInt(params.get('odd') || '0'),
-      message: decodeURIComponent(params.get('msg') || ''),
-      assignment: params.get('assign') || ''
-    };
+parseUrlParams(): any {
+  let queryString = '';
+  const url = window.location.href;
+  
+  console.log('Parsing URL:', url);
+  
+  // Check if params are in hash
+  if (url.includes('#/student?')) {
+    const hashParts = url.split('#/student?');
+    queryString = hashParts[1] || '';
+    console.log('Extracted from hash:', queryString);
+  } else if (url.includes('/student?')) {
+    const urlParts = url.split('/student?');
+    queryString = urlParts[1] || '';
+    console.log('Extracted from path:', queryString);
+  } else {
+    // Fallback to regular query string
+    queryString = window.location.search.substring(1);
   }
+  
+  const params = new URLSearchParams(queryString);
+  
+  return {
+    gameId: params.get('game'),
+    totalStudents: parseInt(params.get('total') || '0'),
+    oddCount: parseInt(params.get('odd') || '0'),
+    message: decodeURIComponent(params.get('msg') || ''),
+    assignment: params.get('assign') || ''
+  };
+}
 }

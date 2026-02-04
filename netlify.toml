@@ -1,19 +1,17 @@
-# ------------------------------------------
-# Netlify Build Configuration for Angular
-# ------------------------------------------
-
 [build]
-  # 1. Build Command: Runs the Angular production build, referencing the 
-  # production configuration in your angular.json.
-  command = "npm run build -- --configuration production"
-  
-  # 2. Publish Directory: Must match the outputPath defined in angular.json (production configuration).
+  command = "npm run build:netlify"
   publish = "dist/odd-one-out/browser"
 
-# 3. Routing Rule for Single Page Applications (SPAs)
-# This ensures that direct access to deep links (like /about or /dashboard)
-# serves index.html with a 200 status, allowing the Angular Router to take over.
+# IMPORTANT: For HTML5 routing (useHash: false)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[redirects]]
+  from = "/student"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  NODE_VERSION = "20"

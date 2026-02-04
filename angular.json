@@ -60,7 +60,7 @@
           "configurations": {
             "production": {
              
-              "outputPath": "dist/odd-one-out/browser", 
+              "outputPath": "dist/odd-one-out", 
              
               "budgets": [
                 {

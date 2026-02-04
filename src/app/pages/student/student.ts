@@ -26,9 +26,38 @@ export class StudentComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
   
-  ngOnInit(): void {
-    this.processParams(this.route.snapshot.queryParams);
+// In student.component.ts, update the processParams method or ngOnInit
+
+ngOnInit(): void {
+  console.log('=== DEBUG URL ===');
+  console.log('Full URL:', window.location.href);
+  console.log('Hash:', window.location.hash);
+  console.log('Search:', window.location.search);
+  
+  // Extract params from hash if they exist
+  const hash = window.location.hash;
+  let params = {};
+  
+  if (hash.includes('?')) {
+    // Extract from hash: #/student?game=...
+    const queryString = hash.split('?')[1];
+    const urlParams = new URLSearchParams(queryString);
+    params = {
+      game: urlParams.get('game'),
+      total: urlParams.get('total'),
+      odd: urlParams.get('odd'),
+      msg: urlParams.get('msg'),
+      assign: urlParams.get('assign')
+    };
+    console.log('Params from hash:', params);
+  } else {
+    // Try regular query params
+    params = this.route.snapshot.queryParams;
+    console.log('Params from query:', params);
   }
+  
+  this.processParams(params);
+}
   
   private processParams(params: any): void {
     try {
